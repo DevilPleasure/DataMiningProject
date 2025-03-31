@@ -141,10 +141,10 @@ print(conf_matrix)
 
 prob_predictions <- predict(rf_model, newdata = test_data, type = "prob")[,2]
 roc_curve <- roc(as.numeric(as.character(test_data$blueWins)), prob_predictions)
-
+auc_rf = auc(roc_curve)
 save_plot("roc_random_forest.png", function() {
   plot(roc_curve, col = "lightgreen", lwd = 2, main = "Courbe ROC - Random Forest")
-  legend("bottomright", legend = paste("AUC =", round(auc_value, 3)), col = "lightgreen", lwd = 2)
+  legend("bottomright", legend = paste("AUC =", round(auc(roc_curve), 3)), col = "lightgreen", lwd = 2)
 })
 
 
@@ -202,9 +202,10 @@ print(conf_matrix)
 
 prob_predictions <- predict(rf_tuned, newdata = test_data, type = "prob")[, "Win"]
 roc_curve <- roc(test_data$blueWins, prob_predictions)
+auc_rf = auc(roc_curve)
 save_plot("roc_rf_tuned.png", function() {
   plot(roc_curve, col = "orange", lwd = 2, main = "ROC Curve - Tuned Random Forest")
-  legend("bottomright", legend = paste("AUC =", round(auc_value, 3)), col = "orange", lwd = 2)
+  legend("bottomright", legend = paste("AUC =", round(auc(roc_curve), 3)), col = "orange", lwd = 2)
 })
 
 
@@ -221,7 +222,7 @@ preProc <- preProcess(train_features, method = c("center", "scale"))
 train_features_scaled <- predict(preProc, train_features)
 test_features_scaled  <- predict(preProc, test_features)
 
-# 📦 Dataset final
+#Dataset final
 train_data <- cbind(train_features_scaled, blueWins = train_target)
 test_data  <- cbind(test_features_scaled, blueWins = test_target)
 
@@ -238,7 +239,7 @@ svm_linear <- train(blueWins ~ ., data = train_data,
                     tuneLength = 5,
                     metric = "ROC")
 
-cat("\n===== SVM Linear =====\n")
+print("\n===== SVM Linear =====\n")
 print(svm_linear)
 
 pred_linear <- predict(svm_linear, newdata = test_data)
@@ -258,7 +259,7 @@ svm_rbf <- train(blueWins ~ ., data = train_data,
                  tuneLength = 5,
                  metric = "ROC")
 
-cat("\n===== SVM RBF =====\n")
+print("\n===== SVM RBF =====\n")
 print(svm_rbf)
 
 pred_rbf <- predict(svm_rbf, newdata = test_data)
@@ -288,7 +289,7 @@ svm_poly <- train(blueWins ~ ., data = train_data,
                   tuneGrid = grid_poly,
                   metric = "ROC")
 
-cat("\n===== SVM Polynomial =====\n")
+print("\n===== SVM Polynomial =====\n")
 print(svm_poly)
 
 pred_poly <- predict(svm_poly, newdata = test_data)
@@ -307,7 +308,7 @@ svm_sigmoid <- svm(as.factor(blueWins) ~ ., data = train_data,
 
 pred_sigmoid <- predict(svm_sigmoid, newdata = test_data, probability = TRUE)
 conf_matrix_sigmoid <- confusionMatrix(pred_sigmoid, test_data$blueWins, positive = "Win")
-print("\n===== SVM Sigmoid =====")
+print("\n===== SVM Sigmoid =====\n")
 print(conf_matrix_sigmoid)
 
 prob_sigmoid <- attr(predict(svm_sigmoid, newdata = test_data, probability = TRUE), "probabilities")[, "Win"]
@@ -454,7 +455,7 @@ best_params <- data.frame(
     round(auc(roc_rbf), 4),
     round(auc(roc_poly), 4),
     round(auc(roc_sigmoid_best), 4),
-    round(auc_value, 4),
+    round(auc_rf, 4),
     round(auc(roc_knn), 4)
   ),
   Balanced_Accuracy = c(
