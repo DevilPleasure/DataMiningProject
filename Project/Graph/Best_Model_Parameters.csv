@@ -1,0 +1,7 @@
+"Model";"Parameters";"AUC";"Balanced_Accuracy"
+"SVM Linear";"C = 1";0,8002;0,729135603197034
+"SVM Sigmoid";"C = 0.1 , gamma = 0.01 , coef0 = 0";0,7992;0,663828995215115
+"kNN";"k = 21";0,7975;0,729624243965568
+"Random Forest Tuned";"mtry = 3";0,7954;0,72204082637204
+"SVM RBF";"sigma = 0.02293 , C = 0.25";0,79;0,732168970234445
+"SVM Polynomial";"degree = 2 , scale = 1 , C = 0.25";0,7829;0,716988291080178
